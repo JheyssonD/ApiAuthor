@@ -1,6 +1,8 @@
-﻿using ApiAuthor.Entities;
+﻿using ApiAuthor.Contexts;
+using ApiAuthor.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +14,26 @@ namespace ApiAuthor.Controllers
     [ApiController]
     public class AuthorController : ControllerBase
     {
-        [HttpGet]
-        public ActionResult<List<Author>> Get()
+
+        private readonly ApiDBContext Context;
+
+        public AuthorController(ApiDBContext context)
         {
-            return new List<Author> {
-                new Author() { Id= 1, Name="Felipe"},
-                new Author() { Id= 2, Name="Claudia"}
-            };
+            Context = context;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<Author>>> Get()
+        {
+            return await  Context.Authors.ToListAsync();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Post(Author author)
+        {
+            Context.Add(author);
+            await Context.SaveChangesAsync();
+            return Ok();
         }
 
     }
