@@ -36,5 +36,36 @@ namespace ApiAuthor.Controllers
             return Ok();
         }
 
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> Update(int id, Author author)
+        {
+            if (id != author.Id)
+            {
+                return BadRequest("El id del autor no coincide con el id de la URL");
+            }
+            bool exist = await Context.Authors.AnyAsync(a => a.Id == id);
+            if (!exist)
+            {
+                return BadRequest("El id del autor no existe");
+            }
+
+            Context.Update(author);
+            await Context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> Remove(int id)
+        {
+            bool exist = await Context.Authors.AnyAsync(a => a.Id == id);
+            if (!exist)
+            {
+                return BadRequest("El id del autor no existe");
+            }
+            Context.Remove(new Author { Id = id } );
+            await Context.SaveChangesAsync();
+            return Ok();
+        }
+
     }
 }
