@@ -15,19 +15,6 @@ namespace ApiAuthor.Entities
         [StringLength(maximumLength: 4, ErrorMessage = "El Campo {0} no debe tener mas de {1} carácteres")]
         // [FirstCapitalLetter]
         public string Name { get; set; }
-        //[Range(18, 120)]
-        //[NotMapped]
-        //public int Age { get; set; }
-        //[CreditCard]
-        //[NotMapped]
-        //public string CredicardNumber{ get; set; }
-        //[Url]
-        //[NotMapped]
-        //public string Site { get; set; }
-        [NotMapped]
-        public int LessThan { get; set; }
-        [NotMapped]
-        public int GreaterThan { get; set; }
 
         public virtual List<Book> Books { get; set; }
 
@@ -42,12 +29,6 @@ namespace ApiAuthor.Entities
                         new String[] { nameof(Name) });
                 }
 
-            }
-
-            if (LessThan > GreaterThan)
-            {
-                yield return new ValidationResult("This field can't be greater than the GreaterThan field",
-                    new String[] { nameof(LessThan) });
             }
         }
     }

@@ -42,6 +42,12 @@ namespace ApiAuthor.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(Author author)
         {
+            bool existNameAuthor = await Context.Authors.AnyAsync(a => a.Name == author.Name);
+            if (existNameAuthor)
+            {
+                return BadRequest($"The Author's name {author.Name} alreasy exist");
+            }
+
             Context.Add(author);
             await Context.SaveChangesAsync();
             return Ok();
