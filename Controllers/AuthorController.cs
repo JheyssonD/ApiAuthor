@@ -28,6 +28,17 @@ namespace ApiAuthor.Controllers
             return await  Context.Authors.Include(a => a.Books).ToListAsync();
         }
 
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Author>> GetById(int id)
+        {
+            Author author =  await Context.Authors.FirstOrDefaultAsync(a => a.Id == id);
+            if (author is null)
+            {
+                return NotFound();
+            }
+            return author;
+        }
+
         [HttpPost]
         public async Task<ActionResult> Post(Author author)
         {
