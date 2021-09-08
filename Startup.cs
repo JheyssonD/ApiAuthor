@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ApiAuthor
@@ -29,7 +30,9 @@ namespace ApiAuthor
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(x => 
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
+            );
 
             services.AddDbContext<ApiDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("LocalConnection"))

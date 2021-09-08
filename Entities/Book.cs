@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 
 namespace ApiAuthor.Entities
 {
-    public class Author
+    public class Book
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public virtual List<Book> Books { get; set; }
+        public string Title { get; set; }
+        public int AuthorId { get; set; }
+        public virtual Author Author { get; set; }
     }
 }
