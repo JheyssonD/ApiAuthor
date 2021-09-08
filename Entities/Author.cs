@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ApiAuthor.Validations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,6 +13,7 @@ namespace ApiAuthor.Entities
         public int Id { get; set; }
         [Required(ErrorMessage = "El Campo {0} es requerido")]
         [StringLength(maximumLength: 4, ErrorMessage = "El Campo {0} no debe tener mas de {1} carácteres")]
+        [FirstCapitalLetter]
         public string Name { get; set; }
         [Range(18, 120)]
         [NotMapped]
