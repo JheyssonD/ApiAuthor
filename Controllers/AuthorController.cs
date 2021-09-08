@@ -4,6 +4,7 @@ using ApiAuthor.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,18 +18,16 @@ namespace ApiAuthor.Controllers
     {
 
         private readonly ApiDBContext Context;
-
+        private readonly ILogger<AuthorController> Logger;
         private readonly IService Service;
-
         private readonly ServiceTrasient ServiceTrasient;
-
         private readonly ServiceScoped ServiceScoped;
-
         private readonly ServiceSingleton ServiceSingleton;
 
-        public AuthorController(ApiDBContext context, IService service, ServiceTrasient serviceTrasient, ServiceScoped serviceScoped, ServiceSingleton serviceSingleton)
+        public AuthorController(ApiDBContext context, ILogger<AuthorController> logger, IService service, ServiceTrasient serviceTrasient, ServiceScoped serviceScoped, ServiceSingleton serviceSingleton)
         {
             Context = context;
+            Logger = logger;
             Service = service;
             ServiceTrasient = serviceTrasient;
             ServiceScoped = serviceScoped;
@@ -52,6 +51,7 @@ namespace ApiAuthor.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Author>>> Get()
         {
+            Logger.LogInformation("Get List Author");
             return await  Context.Authors.Include(a => a.Books).ToListAsync();
         }
 
