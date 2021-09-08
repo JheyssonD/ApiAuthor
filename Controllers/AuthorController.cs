@@ -1,5 +1,6 @@
 ﻿using ApiAuthor.Contexts;
 using ApiAuthor.Entities;
+using ApiAuthor.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +18,35 @@ namespace ApiAuthor.Controllers
 
         private readonly ApiDBContext Context;
 
-        public AuthorController(ApiDBContext context)
+        private readonly IService Service;
+
+        private readonly ServiceTrasient ServiceTrasient;
+
+        private readonly ServiceScoped ServiceScoped;
+
+        private readonly ServiceSingleton ServiceSingleton;
+
+        public AuthorController(ApiDBContext context, IService service, ServiceTrasient serviceTrasient, ServiceScoped serviceScoped, ServiceSingleton serviceSingleton)
         {
             Context = context;
+            Service = service;
+            ServiceTrasient = serviceTrasient;
+            ServiceScoped = serviceScoped;
+            ServiceSingleton = serviceSingleton;
+        }
+
+        [HttpGet("Guid")]
+        public ActionResult GetGuid()
+        {
+            return Ok(new
+            {
+                ControllerTrasient = ServiceTrasient.Guid,
+                ServiceTrasient = Service.GetTrasient(),
+                ControllerScoped = ServiceScoped.Guid,
+                ServiceScoped = Service.GetScoped(),
+                ControllerSingleton = ServiceSingleton.Guid,
+                ServiceSingleton = Service.GetSingleton(),
+            });
         }
 
         [HttpGet]

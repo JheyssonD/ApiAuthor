@@ -1,4 +1,5 @@
 using ApiAuthor.Contexts;
+using ApiAuthor.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -37,6 +38,16 @@ namespace ApiAuthor
             services.AddDbContext<ApiDBContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("LocalConnection"))
             );
+
+            services.AddTransient<IService, ServiceA>();
+            // services.AddTransient<ServiceA>();
+
+            services.AddTransient<ServiceTrasient>();
+
+            services.AddScoped<ServiceScoped>();
+
+            services.AddSingleton<ServiceSingleton>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiAuthor", Version = "v1" });
