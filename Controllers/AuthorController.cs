@@ -1,14 +1,8 @@
 ﻿using ApiAuthor.Contexts;
 using ApiAuthor.Entities;
-using ApiAuthor.Filters;
-using ApiAuthor.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ApiAuthor.Controllers
@@ -19,52 +13,33 @@ namespace ApiAuthor.Controllers
     {
 
         private readonly ApiDBContext Context;
-        private readonly ILogger<AuthorController> Logger;
-        private readonly IService Service;
-        private readonly ServiceTrasient ServiceTrasient;
-        private readonly ServiceScoped ServiceScoped;
-        private readonly ServiceSingleton ServiceSingleton;
 
-        public AuthorController(ApiDBContext context, ILogger<AuthorController> logger, IService service, ServiceTrasient serviceTrasient, ServiceScoped serviceScoped, ServiceSingleton serviceSingleton)
+        public AuthorController(ApiDBContext context)
         {
             Context = context;
-            Logger = logger;
-            Service = service;
-            ServiceTrasient = serviceTrasient;
-            ServiceScoped = serviceScoped;
-            ServiceSingleton = serviceSingleton;
-        }
-
-        [HttpGet("Guid")]
-        [ServiceFilter(typeof(MyActionFilter))]
-        public ActionResult GetGuid()
-        {
-            return Ok(new
-            {
-                ControllerTrasient = ServiceTrasient.Guid,
-                ServiceTrasient = Service.GetTrasient(),
-                ControllerScoped = ServiceScoped.Guid,
-                ServiceScoped = Service.GetScoped(),
-                ControllerSingleton = ServiceSingleton.Guid,
-                ServiceSingleton = Service.GetSingleton(),
-            });
         }
 
         [HttpGet]
-        [HttpGet("Listado")]
-        [HttpGet("/Listado")]
-        [ServiceFilter(typeof(MyActionFilter))]
         public async Task<ActionResult<List<Author>>> Get()
         {
-            throw new NotImplementedException();
-            Logger.LogInformation("Get List Author");
-            return await  Context.Authors.Include(a => a.Books).ToListAsync();
+            return await  Context.Authors.ToListAsync();
         }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Author>> GetById(int id)
         {
-            Author author =  await Context.Authors.FirstOrDefaultAsync(a => a.Id == id);
+            Author author = await Context.Authors.FirstOrDefaultAsync(a => a.Id == id);
+            if (author is null)
+            {
+                return NotFound();
+            }
+            return author;
+        }
+
+        [HttpGet("{name:string}")]
+        public async Task<ActionResult<Author>> GetById([FromRoute] string name)
+        {
+            Author author = await Context.Authors.FirstOrDefaultAsync(a => a.Name == name);
             if (author is null)
             {
                 return NotFound();
@@ -78,7 +53,7 @@ namespace ApiAuthor.Controllers
             bool existNameAuthor = await Context.Authors.AnyAsync(a => a.Name == author.Name);
             if (existNameAuthor)
             {
-                return BadRequest($"The Author's name {author.Name} alreasy exist");
+                return BadRequest($"The Author's name {author.Name} already exist");
             }
 
             Context.Add(author);

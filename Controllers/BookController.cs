@@ -18,23 +18,23 @@ namespace ApiAuthor.Controllers
             Context = context;
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<Book>> GetById(int id)
-        {
-            return await Context.Books.Include(b => b.Author).FirstOrDefaultAsync(b => b.Id == id);
-        }
+        //[HttpGet("{id:int}")]
+        //public async Task<ActionResult<Book>> GetById(int id)
+        //{
+        //    return await Context.Books.Include(b => b.Author).FirstOrDefaultAsync(b => b.Id == id);
+        //}
 
-        [HttpPost]
-        public async Task<ActionResult<Book>> Post(Book book)
-        {
-            bool existBook = await Context.Authors.AnyAsync(a => a.Id == book.AuthorId);
-            if (!existBook)
-            {
-                return BadRequest($"No existe el Author con el id {book.AuthorId}.");
-            }
-            Context.Books.Add(book);
-            await Context.SaveChangesAsync();
-            return Ok(book);
-        }
+        //[HttpPost]
+        //public async Task<ActionResult<Book>> Post(Book book)
+        //{
+        //    bool existBook = await Context.Authors.AnyAsync(a => a.Id == book.AuthorId);
+        //    if (!existBook)
+        //    {
+        //        return BadRequest($"No existe el Author con el id {book.AuthorId}.");
+        //    }
+        //    Context.Books.Add(book);
+        //    await Context.SaveChangesAsync();
+        //    return Ok(book);
+        //}
     }
 }
