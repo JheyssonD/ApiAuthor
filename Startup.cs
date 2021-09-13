@@ -32,7 +32,7 @@ namespace ApiAuthor
             );
 
             services.AddDbContext<ApiDBContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("LocalConnection"))
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
 
             services.AddSwaggerGen(c =>
