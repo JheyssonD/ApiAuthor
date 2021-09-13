@@ -1,5 +1,6 @@
 ﻿using ApiAuthor.Contexts;
 using ApiAuthor.Entities;
+using ApiAuthor.Filters;
 using ApiAuthor.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,7 @@ namespace ApiAuthor.Controllers
         }
 
         [HttpGet("Guid")]
+        [ServiceFilter(typeof(MyActionFilter))]
         public ActionResult GetGuid()
         {
             return Ok(new
@@ -49,8 +51,12 @@ namespace ApiAuthor.Controllers
         }
 
         [HttpGet]
+        [HttpGet("Listado")]
+        [HttpGet("/Listado")]
+        [ServiceFilter(typeof(MyActionFilter))]
         public async Task<ActionResult<List<Author>>> Get()
         {
+            throw new NotImplementedException();
             Logger.LogInformation("Get List Author");
             return await  Context.Authors.Include(a => a.Books).ToListAsync();
         }

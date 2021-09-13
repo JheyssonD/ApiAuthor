@@ -1,5 +1,6 @@
 using ApiAuthor.Contexts;
 using ApiAuthor.Extensions;
+using ApiAuthor.Filters;
 using ApiAuthor.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,7 +27,9 @@ namespace ApiAuthor
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers().AddJsonOptions(x => 
+            services.AddControllers(options => {
+                options.Filters.Add(typeof(ExceptionFilter));
+            }).AddJsonOptions(x => 
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles
             );
 
@@ -42,6 +45,10 @@ namespace ApiAuthor
             services.AddScoped<ServiceScoped>();
 
             services.AddSingleton<ServiceSingleton>();
+
+            services.AddTransient<MyActionFilter>();
+
+            services.AddHostedService<WritingFile>();
 
             services.AddSwaggerGen(c =>
             {
